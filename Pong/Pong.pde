@@ -31,7 +31,6 @@ void setup(){
 void draw(){
   background(0);
   image(crash,(width/2)-100,0,200,200);
-  bola.display();
   bola.move();
   bola.display();
   
