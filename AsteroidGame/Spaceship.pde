@@ -21,10 +21,10 @@ class Spaceship extends Entity {
   }
 
   void control() {
-    if (KeyboardListener.checkKey(RIGHT)) angle += 0.1;
-    if (KeyboardListener.checkKey(LEFT))  angle -= 0.1;
+    if (KeyboardListener.checkKey(RIGHT)) angle += 0.05;
+    if (KeyboardListener.checkKey(LEFT))  angle -= 0.05;
 
-    if (KeyboardListener.checkKey(UP))    speed = min(3.5, speed + 0.1);
+    if (KeyboardListener.checkKey(UP))    speed = min(3.2, speed + 0.1);
     if (KeyboardListener.checkKey(DOWN))  speed = max(0, speed - 0.1);
   }
 }

@@ -16,7 +16,7 @@ class AsteroidsBuffer{
   
   void generateAsteroid(float x, float y, float radius) {
     for (int i = 0; i < buffer.length; i++) {
-      if(!buffer[i].ativo) {
+      if(!buffer[i].active) {
         buffer[i].generate(x, y, radius);
         return;
       }

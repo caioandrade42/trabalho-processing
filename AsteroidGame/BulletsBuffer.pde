@@ -13,7 +13,7 @@ class BulletsBuffer{
     if(millis() - lastShot < 300) return;
     lastShot = millis();
     for (int i = 0; i < buffer.length; i++) {
-      if(!buffer[i].ativo) {
+      if(!buffer[i].active) {
         buffer[i].generate(x, y, angle);
         return;
       }

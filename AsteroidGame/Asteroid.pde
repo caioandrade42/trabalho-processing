@@ -1,7 +1,7 @@
 class Asteroid extends Entity {
   private PShape shape;
   private float radius;
-  private boolean ativo;
+  private boolean active;
   
   Asteroid() {
     super();
@@ -20,7 +20,7 @@ class Asteroid extends Entity {
   }
 
   void draw() {
-    if(!ativo || shape == null) return;
+    if(!active || shape == null) return;
     move();
     shape(shape, pos.x, pos.y);
   }
@@ -47,7 +47,7 @@ class Asteroid extends Entity {
       s.vertex(vx, vy);
     }
     s.endShape(CLOSE);
-    ativo = true;
+    active = true;
     return s;
   }
   
