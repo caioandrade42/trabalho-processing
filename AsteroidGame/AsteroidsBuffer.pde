@@ -8,12 +8,6 @@ class AsteroidsBuffer{
     }
   }
   
-  void generateAsteroid(float radius) {
-    float x = random(0, width);
-    float y = random(0, height);
-    generateAsteroid(x, y, radius);
-  }
-  
   void generateAsteroid(float x, float y, float radius) {
     for (int i = 0; i < buffer.length; i++) {
       if(!buffer[i].active) {

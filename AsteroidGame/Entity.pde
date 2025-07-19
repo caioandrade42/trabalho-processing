@@ -15,8 +15,7 @@ abstract class Entity{
     acc.x = cos(angle) * speed;
     acc.y = sin(angle) * speed;
     
-    pos.x += acc.x;
-    pos.y += acc.y;
+    pos.add(acc);
     wrapPosition();
   }
   

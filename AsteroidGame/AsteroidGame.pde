@@ -1,4 +1,4 @@
-Spaceship s;
+Spaceship spaceship;
 AsteroidsBuffer asteroidsBuffer;
 BulletsBuffer bulletsBuffer;
 int score = 0;
@@ -6,12 +6,10 @@ int level = 1;
 
 void setup(){
   size(800, 600);
-  s = new Spaceship();
+  spaceship = new Spaceship();
   asteroidsBuffer = new AsteroidsBuffer();
   bulletsBuffer = new BulletsBuffer();
-  for(int i = 0; i < 4; i++){
-    asteroidsBuffer.generateAsteroid(random(10, 50));
-  }
+  generateStartAsteroids();
   textAlign(LEFT, TOP);
   textSize(48);
 }
@@ -20,18 +18,18 @@ void draw(){
   checkLevelClear();
   background(0);
 
-  s.control();
+  spaceship.control();
 
   asteroidsBuffer.draw();
   bulletsBuffer.draw();
   if(KeyboardListener.checkKey(32)){
-    PVector pos = s.getPosition();
-    bulletsBuffer.generateBullet(pos.x, pos.y, s.getAngle());
+    PVector pos = spaceship.getPosition();
+    bulletsBuffer.generateBullet(pos.x, pos.y, spaceship.getAngle());
   }
   
-  checkCollision();
+  checkCollisions();
 
-  s.draw();
+  spaceship.draw();
   
   stroke(255);
   text(score, 20, 20);
@@ -42,14 +40,26 @@ void checkLevelClear(){
     if(asteroid.active) return;
   }
   level++;
-  
-  for(int i = 0; i < min(15, level * 4); i++){
-    asteroidsBuffer.generateAsteroid(random(10, 50));
-  }
-  
+  generateStartAsteroids();
 }
 
-void checkCollision(){
+void generateStartAsteroids(){
+  for(int i = 0; i < min(15, level * 4); i++){
+    float x;
+    float y;
+    do{
+      x = random(0, width);
+      y = random(0, height);
+    }while(dist(x, y, spaceship.getPosition().x, spaceship.getPosition().y) < 150);
+    asteroidsBuffer.generateAsteroid(x, y, random(10, 50));
+  }
+}
+
+void checkCollisions(){
+  checkCollisionAsteroidWithBullet();
+}
+
+void checkCollisionAsteroidWithBullet(){
   for(Asteroid asteroid : asteroidsBuffer.getBuffer()){
     if(!asteroid.active) continue;
     for(Bullet bullet : bulletsBuffer.getBuffer()){
@@ -68,6 +78,13 @@ void checkCollision(){
         }
       }
     }
+  }
+}
+
+void checkCollisionAsteroidWithSpaceship(){
+  for(Asteroid asteroid : asteroidsBuffer.getBuffer()){
+    if(!asteroid.active) continue;
+    
   }
 }
 
