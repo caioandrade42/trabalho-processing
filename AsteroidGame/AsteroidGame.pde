@@ -3,6 +3,9 @@ AsteroidsBuffer asteroidsBuffer;
 BulletsBuffer bulletsBuffer;
 int score = 0;
 int level = 1;
+int lifes = 3;
+boolean respawning = false;
+float deathTime;
 
 void setup(){
   size(800, 600);
@@ -18,21 +21,30 @@ void draw(){
   checkLevelClear();
   background(0);
 
-  spaceship.control();
+  checkCollisionAsteroidWithBullet();
+  if(!respawning){
+    if(checkCollisionAsteroidWithSpaceship()){
+      lifes--;
+      respawning = true;
+      deathTime = millis();
+      spaceship.explode();
+    }
+    if(KeyboardListener.checkKey(32)){
+      PVector pos = spaceship.getPosition();
+      bulletsBuffer.generateBullet(pos.x, pos.y, spaceship.getAngle());
+    }
+    spaceship.control();
+  }else if(millis() - deathTime > 5000){
+    spaceship.reset();
+    respawning = false; 
+  }
 
   asteroidsBuffer.draw();
   bulletsBuffer.draw();
-  if(KeyboardListener.checkKey(32)){
-    PVector pos = spaceship.getPosition();
-    bulletsBuffer.generateBullet(pos.x, pos.y, spaceship.getAngle());
-  }
-  
-  checkCollisions();
 
   spaceship.draw();
   
-  stroke(255);
-  text(score, 20, 20);
+  drawUI();
 }
 
 void checkLevelClear(){
@@ -55,17 +67,13 @@ void generateStartAsteroids(){
   }
 }
 
-void checkCollisions(){
-  checkCollisionAsteroidWithBullet();
-}
-
 void checkCollisionAsteroidWithBullet(){
   for(Asteroid asteroid : asteroidsBuffer.getBuffer()){
     if(!asteroid.active) continue;
     for(Bullet bullet : bulletsBuffer.getBuffer()){
       if(!bullet.active) continue;
       PVector pos = bullet.getPosition();
-      if(asteroid.pointInsideShape(pos.x, pos.y)){
+      if(CollisionUtils.pointInsideShape(asteroid.shape, asteroid.getPosition(), pos.x, pos.y)){
         asteroid.active = false;
         bullet.active = false;
         score += asteroid.getRadius() * (level * random(5, 10));
@@ -81,10 +89,35 @@ void checkCollisionAsteroidWithBullet(){
   }
 }
 
-void checkCollisionAsteroidWithSpaceship(){
+boolean checkCollisionAsteroidWithSpaceship(){
+  if(respawning) return false;
   for(Asteroid asteroid : asteroidsBuffer.getBuffer()){
     if(!asteroid.active) continue;
-    
+    int count = asteroid.shape.getVertexCount();
+
+    for (int i = 0; i < spaceship.transformedVerts.length; i++) {
+      PVector s1 = spaceship.transformedVerts[i];
+      PVector s2 = spaceship.transformedVerts[(i + 1) % spaceship.transformedVerts.length];
+  
+      for (int j = 0; j < count; j++) {
+        PVector a1 = asteroid.shape.getVertex(j).copy().add(asteroid.pos);
+        PVector a2 = asteroid.shape.getVertex((j + 1) % count).copy().add(asteroid.pos);
+          
+        if (CollisionUtils.linesIntersect(s1, s2, a1, a2)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+void drawUI(){
+  text(score, 10, 10);
+  for (int i = 0; i < lifes; i++) {
+    pushMatrix();
+    translate((20 + 10) * i + 20, 70);
+    rotate(-HALF_PI);
+    shape(spaceship.shipShape);
+    popMatrix();
   }
 }
 

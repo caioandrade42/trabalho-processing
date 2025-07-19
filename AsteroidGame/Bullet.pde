@@ -1,12 +1,11 @@
 class Bullet extends Entity{
   
-  private boolean active;
   private static final int BULLET_SIZE = 3;
   private float timeShot;
 
   Bullet(){
     super();
-    speed = 5;
+    speed = 8;
   }
   
   Bullet(float x, float y, float angle){

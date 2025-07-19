@@ -3,6 +3,7 @@ abstract class Entity{
   protected PVector acc;
   protected float speed;
   protected float angle;
+  protected boolean active;
   
   Entity(){
     pos = new PVector();

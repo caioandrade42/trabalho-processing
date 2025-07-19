@@ -1,7 +1,6 @@
 class Asteroid extends Entity {
   private PShape shape;
   private float radius;
-  private boolean active;
   
   Asteroid() {
     super();
@@ -49,27 +48,6 @@ class Asteroid extends Entity {
     s.endShape(CLOSE);
     active = true;
     return s;
-  }
-  
-  boolean pointInsideShape(float px, float py) {
-    int count = shape.getVertexCount();
-    int crossing = 0;
-    
-    for (int i = 0; i < count; i++) {
-      PVector v1 = shape.getVertex(i);
-      PVector v2 = shape.getVertex((i + 1) % count);
-  
-      float x1 = v1.x + pos.x;
-      float y1 = v1.y + pos.y;
-      float x2 = v2.x + pos.x;
-      float y2 = v2.y + pos.y;
-  
-      if ((y1 > py) != (y2 > py)) {
-        float interX = (x2 - x1) * (py - y1) / (y2 - y1) + x1;
-        if (px < interX) crossing++;
-      }
-    }
-    return crossing % 2 == 1;
   }
   
   float getRadius(){
