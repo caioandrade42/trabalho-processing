@@ -1,5 +1,6 @@
 import processing.sound.*;
-SoundFile sons;
+SoundFile somMorte;
+SoundFile somComida;
 
 // Cobra
 ArrayList<PVector> cobra;
@@ -21,8 +22,8 @@ float escala;
 float offsetX, offsetY;
 float tamanhoSegmentoReal;
 void setup() {
-    SoundFile sons = new SoundFile(this, "./data/ai.wav");
-    SoundFile sons2 = new SoundFile(this, "./data/comida.wav");
+  somMorte = new SoundFile(this, "./data/ai.wav");
+  somComida = new SoundFile(this, "./data/comida.wav");
   fullScreen();
   calcularEscala();
   frameRate(10);
@@ -63,10 +64,10 @@ void moverCobra() {
   PVector novaCabeca = cobra.get(0).copy();
   novaCabeca.x += direcao.x * tamanhoCobra;
   novaCabeca.y += direcao.y * tamanhoCobra;
-  
+
   cobra.add(0, novaCabeca);
   if (dist(novaCabeca.x, novaCabeca.y, comida.x, comida.y) < 1) {
-    sons2.play();
+    somComida.play();
     pontuacao++;
     posicionarComida();
   } else {
@@ -77,12 +78,12 @@ void moverCobra() {
 void verificarColisoes() {
   PVector cabeca = cobra.get(0);
   if (cabeca.x < 0 || cabeca.x >= tabuleiroLargura || cabeca.y < 0 || cabeca.y >= tabuleiroAltura) {
-    sons.play();
+    somMorte.play();
     jogando = false;
   }
   for (int i = 1; i < cobra.size(); i++) {
     if (cabeca.equals(cobra.get(i))) {
-      sons.play();
+      somMorte.play();
       jogando = false;
     }
   }
@@ -104,9 +105,9 @@ void desenharComida() {
 void posicionarComida() {
   int cols = tabuleiroLargura / tamanhoCobra;
   int rows = tabuleiroAltura / tamanhoCobra;
-  
-  comida = new PVector(floor(random(cols)) * tamanhoCobra, 
-                       floor(random(rows)) * tamanhoCobra);
+
+  comida = new PVector(floor(random(cols)) * tamanhoCobra,
+    floor(random(rows)) * tamanhoCobra);
 }
 
 void exibirPontuacao() {
@@ -119,13 +120,13 @@ void exibirPontuacao() {
 void exibirFimDeJogo() {
   fill(255, 0, 0);
   textAlign(CENTER, CENTER);
-  
+
   textSize(48 * escala);
   text("FIM DE JOGO", tabuleiroLargura * escala / 2, tabuleiroAltura * escala / 2 - (60 * escala));
-  
+
   textSize(32 * escala);
   text("Pontuação: " + pontuacao, tabuleiroLargura * escala / 2, tabuleiroAltura * escala / 2);
-  
+
   textSize(24 * escala);
   text("Pressione 'R' para reiniciar", tabuleiroLargura * escala / 2, tabuleiroAltura * escala / 2 + (60 * escala));
 }
