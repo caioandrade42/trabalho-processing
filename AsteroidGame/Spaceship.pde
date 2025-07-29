@@ -93,6 +93,7 @@ class Spaceship extends Entity {
   
   void explode(){
     active = false;
+    explosionSound.play();
   
     for(int i = 0; i < 10; i++){
       float explosionX = pos.x + random(-15, 15);

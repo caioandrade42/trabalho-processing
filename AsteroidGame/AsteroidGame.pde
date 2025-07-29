@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 Spaceship spaceship;
 AsteroidsBuffer asteroidsBuffer;
 BulletsBuffer bulletsBuffer;
@@ -7,6 +9,8 @@ int lifes = 3;
 boolean respawning = false;
 float deathTime;
 GameState state = GameState.Start;
+SoundFile laserSound;
+SoundFile explosionSound;
 
 final int FONT_SIZE = 64;
 
@@ -28,6 +32,8 @@ void setup(){
   bulletsBuffer = new BulletsBuffer(10);
   textSize(FONT_SIZE);
   background(0);
+  laserSound = new SoundFile(this, "./sounds/laser.mp3");
+  explosionSound = new SoundFile(this, "./sounds/explosion.mp3");
 }
 
 void draw(){
@@ -81,7 +87,8 @@ void playGame(){
     }
     if(KeyboardListener.checkKey(32)){
       PVector pos = spaceship.getPosition();
-      bulletsBuffer.generateBullet(pos.x, pos.y, spaceship.getAngle());
+      boolean generated = bulletsBuffer.generateBullet(pos.x, pos.y, spaceship.getAngle());
+      if(generated)  laserSound.play();
     }
     spaceship.control();
   }else if(millis() - deathTime > 5000){
@@ -148,6 +155,7 @@ void checkCollisionAsteroidWithBullet(){
         asteroid.active = false;
         bullet.active = false;
         score += asteroid.getRadius() * (level * random(5, 10));
+        explosionSound.play();
         if(asteroid.getRadius() > 17){
           int childAsteroids = (int)random(2, 4);
           float newRadius = max(14, asteroid.getRadius() / 2);
