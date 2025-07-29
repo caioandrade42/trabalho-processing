@@ -2,6 +2,8 @@ class Spaceship extends Entity {
   
   PShape shipShape;
   PVector[] transformedVerts;
+  ParticleSystem smoke = new ParticleSystem(10, "./sprites/smoke.png", 50);
+  ParticleSystem explosion = new ParticleSystem(10, "./sprites/smoke.png", 0);
   
   Spaceship() {
     super();
@@ -39,6 +41,8 @@ class Spaceship extends Entity {
     }
     speed = max(0, speed - 0.28);
     acc.mult(0.998);
+    smoke.draw();
+    explosion.draw();
   }
 
   void control() {
@@ -52,6 +56,16 @@ class Spaceship extends Entity {
       float limitSpeed = 2.8;
       acc.x = limitValue(acc.x, -limitSpeed, limitSpeed);
       acc.y = limitValue(acc.y, -limitSpeed, limitSpeed);
+      
+      float backAngle = angle + PI;
+      float tailOffset = 12;
+      
+      float spawnX = pos.x + cos(backAngle) * tailOffset;
+      float spawnY = pos.y + sin(backAngle) * tailOffset;
+      smoke.generateParticle(
+          spawnX, spawnY, 10, 500, 2, backAngle,
+        List.of(new ExpandEffect(), new FadeEffect())
+      );
     }
   }
   
@@ -72,6 +86,17 @@ class Spaceship extends Entity {
   
   void explode(){
     active = false;
+  
+    for(int i = 0; i < 10; i++){
+      float explosionX = pos.x + random(-15, 15);
+      float explosionY = pos.y + random(-15, 15);
+      float explosionTime = random(500, 3700);
+      float startSize = random(15, 30);
+      explosion.generateParticle(
+            explosionX, explosionY, startSize, explosionTime, 0, 0,
+          List.of(new ExpandEffect(), new FadeEffect())
+        );
+    }
   }
   
   void reset(){
