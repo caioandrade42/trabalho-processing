@@ -19,10 +19,23 @@ void setup(){
   fullScreen();  
   bola = new bola(width/2, height/2, 50);
   setaVelocidade();
-  base = new SoundFile(this, "026491_pixel-song-8-72675.mp3");
-  bateuEsquerda = new SoundFile(this, "bateuesquerdo.mp3");
-  bateuDireita = new SoundFile(this, "bateudireita.mp3");
-  ponto = new SoundFile(this,"cute-level-up-3-189853.mp3");
+  
+  // Tenta carregar os arquivos de som com tratamento de erro
+  try {
+    base = new SoundFile(this, "026491_pixel-song-8-72675.mp3");
+    bateuEsquerda = new SoundFile(this, "bateuesquerdo.mp3");
+    bateuDireita = new SoundFile(this, "bateudireita.mp3");
+    ponto = new SoundFile(this,"cute-level-up-3-189853.mp3");
+    
+    // Testa se o áudio funciona
+    if (base != null) {
+      base.play();
+    }
+  } catch (Exception e) {
+    println("Aviso: Não foi possível carregar os arquivos de áudio. O jogo continuará sem som.");
+    println("Erro: " + e.getMessage());
+  }
+  
   barraEsquerda = new barra(15, height/2, 30,200);
   barraDireita = new barra(width-15, height/2, 30,200);
 
@@ -41,18 +54,16 @@ void draw(){
 
   
   if (bola.direita() > width) {
-    base.stop();
-    ponto.play();
-    base.play();
+    playSafely(base, true); // para e toca
+    playSafely(ponto, false); // só toca
     setaVelocidade();
     placarEsquerda = placarEsquerda + 1;
     bola.x = width/2;
     bola.y = height/2;
   }
   if (bola.Esquerda() < 0) {
-    base.stop();
-    ponto.play();
-    base.play();
+    playSafely(base, true); // para e toca
+    playSafely(ponto, false); // só toca
     setaVelocidade();
     placardireita = placardireita + 1;
     bola.x = width/2;
@@ -85,13 +96,13 @@ void draw(){
   if ( bola.Esquerda() < barraEsquerda.direita() && bola.y > barraEsquerda.topo() && bola.y < barraEsquerda.inferior()){
     bola.velocidadeX = (bola.velocidadeX*1.1)* -1;
     bola.velocidadeY = map(bola.y - barraEsquerda.y, -barraEsquerda.h/2, barraEsquerda.h/2, -10, 10);
-    bateuEsquerda.play();
+    playSafely(bateuEsquerda, false);
   }
 
   if ( bola.direita() > barraDireita.esquerda() && bola.y > barraDireita.topo() && bola.y < barraDireita.inferior()) {
     bola.velocidadeX = (bola.velocidadeX*1.1)* -1;
     bola.velocidadeY = map(bola.y - barraDireita.y, -barraDireita.h/2, barraDireita.h/2, -10, 10);
-    bateuDireita.play();
+    playSafely(bateuDireita, false);
   } 
   
   textSize(40);
@@ -169,6 +180,19 @@ void reset() {
   bola.x = width/2;
   bola.y = height/2;
   setaVelocidade();
-  base.stop();
-  base.play();
+  playSafely(base, true); // para e toca
+}
+
+// Função auxiliar para tocar sons com segurança
+void playSafely(SoundFile sound, boolean stopFirst) {
+  try {
+    if (sound != null) {
+      if (stopFirst) {
+        sound.stop();
+      }
+      sound.play();
+    }
+  } catch (Exception e) {
+    // Ignora erros de áudio silenciosamente para não interromper o jogo
+  }
 }
