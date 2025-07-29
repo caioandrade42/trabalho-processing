@@ -10,8 +10,8 @@ float deathTime;
 void setup(){
   size(800, 600);
   spaceship = new Spaceship();
-  asteroidsBuffer = new AsteroidsBuffer();
-  bulletsBuffer = new BulletsBuffer();
+  asteroidsBuffer = new AsteroidsBuffer(50);
+  bulletsBuffer = new BulletsBuffer(10);
   generateStartAsteroids();
   textAlign(LEFT, TOP);
   textSize(48);

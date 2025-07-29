@@ -1,11 +1,7 @@
-class AsteroidsBuffer{
-  private static final int MAX_CAPACITY = 50;
-  private final Asteroid[] buffer = new Asteroid[MAX_CAPACITY];
+class AsteroidsBuffer extends Buffer<Asteroid>{
   
-  AsteroidsBuffer(){
-    for(int i = 0; i < MAX_CAPACITY; i++){
-      buffer[i] = new Asteroid();
-    }
+  AsteroidsBuffer(int capacity){
+    super(Asteroid.class, capacity, Asteroid::new);
   }
   
   void generateAsteroid(float x, float y, float radius) {
@@ -15,15 +11,5 @@ class AsteroidsBuffer{
         return;
       }
     }
-  }
-  
-  void draw(){
-    for(Asteroid asteroid : buffer){
-      asteroid.draw();
-    }
-  }
-  
-  Asteroid[] getBuffer(){
-    return buffer;
   }
 }
