@@ -38,8 +38,8 @@ class Particle extends Entity {
   }
 
   void generate(float x, float y, float size, float lifeTime, float speed, float angle, List<ParticleEffect> effects) {
-    this.pos.x = x;
-    this.pos.y = y;
+    this.pos.x = x - size*0.5;
+    this.pos.y = y - size*0.5;
     this.baseSize = size;
     this.size = size;
     this.lifeTime = lifeTime;

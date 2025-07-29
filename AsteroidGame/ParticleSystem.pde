@@ -26,4 +26,11 @@ class ParticleSystem extends Buffer<Particle> {
       }
     }
   }
+  
+  void clear(){
+    super.clear();
+    for (int i = 0; i < buffer.length; i++) {
+      buffer[i].spawned = false;
+    }
+  }
 }

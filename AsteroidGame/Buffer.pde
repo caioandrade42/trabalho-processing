@@ -23,4 +23,10 @@ abstract class Buffer<T extends Entity>{
   T[] getBuffer() {
     return buffer;
   }
+  
+  void clear(){
+    for(T obj : buffer){
+      obj.active = false;
+    }
+  }
 }

@@ -2,7 +2,7 @@ class Spaceship extends Entity {
   
   PShape shipShape;
   PVector[] transformedVerts;
-  ParticleSystem smoke = new ParticleSystem(10, "./sprites/smoke.png", 50);
+  ParticleSystem smoke = new ParticleSystem(15, "./sprites/smoke.png", 50);
   ParticleSystem explosion = new ParticleSystem(10, "./sprites/smoke.png", 0);
   
   Spaceship() {
@@ -22,6 +22,7 @@ class Spaceship extends Entity {
     shipShape.vertex(-10, 10);
     shipShape.vertex(-5, 0);
     shipShape.endShape(CLOSE);
+    shipShape.scale(1.3);
     transformedVerts = new PVector[shipShape.getVertexCount()];
     for(int i = 0; i < transformedVerts.length; i++){
       transformedVerts[i] = new PVector();
@@ -57,13 +58,19 @@ class Spaceship extends Entity {
       acc.x = limitValue(acc.x, -limitSpeed, limitSpeed);
       acc.y = limitValue(acc.y, -limitSpeed, limitSpeed);
       
-      float backAngle = angle + PI;
+      float noiseAngle = random(-0.2,0.2);
+      
+      float backAngle = angle + PI + noiseAngle;
       float tailOffset = 12;
+      
+      float particleSize = 12;
+      float duration = 500;
+      float speed = 1.5;
       
       float spawnX = pos.x + cos(backAngle) * tailOffset;
       float spawnY = pos.y + sin(backAngle) * tailOffset;
       smoke.generateParticle(
-          spawnX, spawnY, 10, 500, 2, backAngle,
+          spawnX, spawnY, particleSize, duration, speed, backAngle,
         List.of(new ExpandEffect(), new FadeEffect())
       );
     }

@@ -6,11 +6,11 @@ class Asteroid extends Entity {
     super();
   }
 
-  Asteroid(float px, float py, float raio) {
+  Asteroid(float px, float py, float radius) {
     this();
     pos.x = px;
     pos.y = py;
-    shape = generateShape(raio);
+    shape = generateShape(radius);
   }
   
   void randomProperties(){
@@ -40,7 +40,7 @@ class Asteroid extends Entity {
     s.stroke(255);
     for (int i = 0; i < numPoints; i++) {
       float ang = TWO_PI / numPoints * i;
-      float r = radius * random(0.6, 1.2);
+      float r = radius * random(1.0, 2.2);
       float vx = cos(ang) * r;
       float vy = sin(ang) * r;
       s.vertex(vx, vy);

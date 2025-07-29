@@ -1,6 +1,6 @@
 class Bullet extends Entity{
   
-  private static final int BULLET_SIZE = 3;
+  private static final int BULLET_SIZE = 5;
   private float timeShot;
 
   Bullet(){

@@ -6,20 +6,70 @@ int level = 1;
 int lifes = 3;
 boolean respawning = false;
 float deathTime;
+GameState state = GameState.Start;
+
+final int FONT_SIZE = 64;
+
+String[] startMenuText = {
+  "Asteroid Game",
+  "Press Space to Play"
+};
+
+String[] gameOverMenuText = {
+  "Asteroid Game",
+  "Score: " + score,
+  "Press Space to Play"
+};
 
 void setup(){
-  size(800, 600);
+  fullScreen();
   spaceship = new Spaceship();
   asteroidsBuffer = new AsteroidsBuffer(50);
   bulletsBuffer = new BulletsBuffer(10);
-  generateStartAsteroids();
-  textAlign(LEFT, TOP);
-  textSize(48);
+  textSize(FONT_SIZE);
+  background(0);
 }
 
 void draw(){
-  checkLevelClear();
   background(0);
+  switch(state){
+    case Start:
+      startMenu();
+      break;
+    case Playing:
+      playGame();
+      break;
+    case GameOver:
+      gameOver();
+      break;
+  }
+  
+}
+
+void startMenu(){
+  drawText(CENTER, width * 0.5, height * 0.5 - FONT_SIZE, startMenuText);
+
+  if(KeyboardListener.checkKey(32)){
+    reset();
+  }
+}
+
+void drawText(int textAlignX, float originX, float originY, String[] lines) {
+  textAlign(textAlignX, TOP);
+  float lineHeight = textAscent() + textDescent();
+  for (int i = 0; i < lines.length; i++) {
+    text(lines[i], originX, originY + i * lineHeight);
+  }
+}
+
+
+void playGame(){
+  if(lifes < 0){
+    state = GameState.GameOver;
+    return;
+  }
+
+  checkLevelClear();
 
   checkCollisionAsteroidWithBullet();
   if(!respawning){
@@ -45,6 +95,27 @@ void draw(){
   spaceship.draw();
   
   drawUI();
+}
+
+void gameOver(){
+  gameOverMenuText[1] = "Score: " + score;
+  drawText(CENTER, width * 0.5, height * 0.5 - FONT_SIZE, gameOverMenuText);
+  if(KeyboardListener.checkKey(32)){
+    reset();
+  }
+}
+
+void reset(){
+  state = GameState.Playing;
+  lifes = 3;
+  level = 1;
+  score = 0;
+  asteroidsBuffer.clear();
+  bulletsBuffer.clear();
+  spaceship.smoke.clear();
+  spaceship.explosion.clear();
+  spaceship.reset();
+  respawning = false; 
 }
 
 void checkLevelClear(){
@@ -111,11 +182,13 @@ boolean checkCollisionAsteroidWithSpaceship(){
 }
 
 void drawUI(){
-  text(score, 10, 10);
+  textAlign(LEFT, TOP);
+  text("Score: " + score, 20, 20);
   for (int i = 0; i < lifes; i++) {
     pushMatrix();
-    translate((20 + 10) * i + 20, 70);
+    translate((20 + 40) * i + 40, 120);
     rotate(-HALF_PI);
+    scale(1.5);
     shape(spaceship.shipShape);
     popMatrix();
   }
