@@ -3,7 +3,7 @@ RELATÓRIO DO PROJETO - JOGOS CLÁSSICOS EM PROCESSING
 
 RESUMO
 ------
-Este projeto consiste na implementação de dois jogos clássicos utilizando a linguagem Processing: Pong e Snake (Cobrinha). Ambos os jogos foram desenvolvidos com recursos de áudio e gráficos simples, oferecendo uma experiência interativa completa. O projeto demonstra conceitos fundamentais de programação de jogos, incluindo detecção de colisão, controle de entrada do usuário, gerenciamento de estado e integração multimídia.
+Este projeto consiste na implementação de três jogos clássicos utilizando a linguagem Processing: Pong, Snake (Cobrinha) e Asteroid. Todos os jogos foram desenvolvidos com recursos de áudio e gráficos simples, oferecendo uma experiência interativa completa. O projeto demonstra conceitos fundamentais de programação de jogos, incluindo detecção de colisão, controle de entrada do usuário, gerenciamento de estado e integração multimídia.
 
 INTRODUÇÃO
 ----------
@@ -11,7 +11,7 @@ O objetivo deste projeto foi recriar dois jogos icônicos da história dos video
 
 Processing oferece uma sintaxe simplificada e um ambiente de desenvolvimento integrado que facilita a criação de projetos gráficos e interativos. A escolha desta plataforma permitiu focar nos aspectos fundamentais da lógica de jogos sem se preocupar com complexidades técnicas de baixo nível.
 
-Os jogos selecionados - Pong e Snake - representam marcos importantes na evolução dos videogames e são ideais para demonstrar conceitos essenciais como:
+Os jogos selecionados - Pong, Snake e Asteroid - representam marcos importantes na evolução dos videogames e são ideais para demonstrar conceitos essenciais como:
 - Programação orientada a objetos
 - Detecção de colisão
 - Controle de entrada do usuário
@@ -28,7 +28,7 @@ Tecnologias Utilizadas:
 - Imagens PNG para elementos gráficos
 
 Estrutura do Projeto:
-O projeto está organizado em duas pastas principais:
+O projeto está organizado em três pastas principais:
 
 1. Pong/
    - Pong.pde (arquivo principal)
@@ -39,6 +39,25 @@ O projeto está organizado em duas pastas principais:
 2. Cobrinha/
    - cobrinha.pde (arquivo principal)
    - data/ (recursos de áudio)
+
+3. AsteroidGame/
+   - AsteroidGame.pde (arquivo principal)
+   - Asteroid.pde (classe de asteroid)
+   - AsteroidBuffer.pde (classe de que armazena os asteroids para melhor uso de memória)
+   - Buffer.pde (classe de buffer base para ser reutilizada)
+   - Bullet.pde (classe de balas)
+   - BulletBuffer.pde (classe de que armazena as bullets para melhor uso de memória)
+   - CollisionUtils.pde (classe que disponibiliza verificação de colisões)
+   - Entity.pde (classe base para os objetos de jogo)
+   - GameState.pde (enum que lista todos os estados do jogo
+   - KeyboardListener.pde (classe que disponibiliza verificação de entrada de teclado)
+   - Particle.pde (classe de partículas)
+   - ParticleEffect.pde (interface base para efeitos de partícula)
+   - ParticleEffects.pde (conjunto de classes de efeitos de partícula)
+   - ParticleSystem.pde (classe de que armazena as partículas para melhor uso de memória)
+   - Spaceship.pde (classe da nave)
+   - sounds/ (recursos de áudio)
+   - sprites/ (recursos de imagens)
 
 Metodologia de Desenvolvimento:
 
@@ -58,12 +77,21 @@ Metodologia de Desenvolvimento:
    - Interface responsiva para diferentes resoluções
    - Efeitos sonoros para ações do jogo
 
+3. Jogo Asteroid:
+   - Controle da nave com teclas direcionais e propulsão
+   - Disparo de projéteis com barra de espaço
+   - Geração aleatória e progressiva de asteroides
+   - Sistema de colisão entre nave, projéteis e asteroides
+   - Divisão de asteroides grandes em menores após impacto
+   - Sistema de pontuação com base na destruição de asteroides
+   - Partículas e efeitos visuais para explosões
+
 Técnicas de Programação Aplicadas:
 
 1. Programação Orientada a Objetos:
-   - Classes separadas para bola e barra no Pong
+   - Classes separadas diferentes objetos
    - Encapsulamento de propriedades e métodos
-   - Reutilização de código através de instâncias de classe
+   - Reutilização de código através de instâncias de classe, interfaces e Generics
 
 2. Detecção de Colisão:
    - Métodos específicos para calcular bordas dos objetos
@@ -79,6 +107,11 @@ Técnicas de Programação Aplicadas:
    - Try-catch para carregamento de áudio
    - Função playSafely() para reprodução segura de sons
    - Continuidade do jogo mesmo sem áudio
+
+5. Reutilização Estratégica de Objetos em Memória:
+   - Utilização de buffers para controle eficiente de entidades
+   - Utilização do padrão de reaproveitamento ("object pooling") para projéteis e partículas
+   - Evita recriação constante de objetos em cada frame, reduzindo o consumo de memória e melhorando a performance
 
 RESULTADOS
 ----------
@@ -128,9 +161,37 @@ Características Técnicas:
 - Utilização de ArrayList para gerenciar segmentos da cobra
 - Prevenção de movimentos inválidos (reversão de direção)
 
+Jogo Asteroids:
+Funcionalidades Implementadas:
+✓ Controle da nave com teclas direcionais e propulsão (setas)
+✓ Disparo de projéteis com barra de espaço
+✓ Geração aleatória e progressiva de asteroides
+✓ Sistema de colisão entre nave, projéteis e asteroides
+✓ Divisão de asteroides grandes em menores após impacto
+✓ Partículas e efeitos visuais para explosões
+✓ Sistema de pontuação com base na destruição de asteroides
+✓ Efeitos sonoros integrados:
+  - Tiro laser
+  - Explosão dos asteroides
+✓ Interface gráfica responsiva com HUD minimalista
+✓ Sistema de vidas e fim de jogo com reinício
+
+Características Técnicas:
+
+- Arquitetura orientada a objetos com múltiplas classes:
+  - Spaceship, Asteroid, Bullet, Particle, Entity, entre outras
+- Uso extensivo de herança e polimorfismo para garantir reaproveitamento e flexibilidade
+- Utilização de buffers para entidades ativas no jogo (ex: BulletsBuffer, AsteroidsBuffer)
+- Reaproveitamento de objetos por meio da técnica de object pooling, otimizando desempenho e consumo de memória
+- Controle de colisões genérico via CollisionUtils
+- Gerenciamento de estados do jogo (GameState)
+- Sistema modular de efeitos de partículas com reaproveitamento (ParticleEffects)
+- Utilização de arquivos de áudio (.mp3) e sprites (.png)
+- Organização clara em arquivos .pde separados
+
 Análise Comparativa:
 
-Ambos os jogos demonstram diferentes aspectos da programação de jogos:
+Todos os jogos demonstram diferentes aspectos da programação de jogos:
 
 1. Pong focou em:
    - Física contínua de movimento
@@ -143,6 +204,12 @@ Ambos os jogos demonstram diferentes aspectos da programação de jogos:
    - Estruturas de dados dinâmicas
    - Gerenciamento de estado complexo
    - Interface de usuário informativa
+
+3. Asteroid focou em:
+   - Implementar uma estrutura mais complexa baseada em múltiplas entidades interativas
+   - Gerenciar diferentes estados do jogo e múltiplos sistemas de objetos simultaneamente
+   - Usar técnicas mais avançadas como buffers, listeners de teclado e efeitos visuais
+   - Colisões mais avançadas
 
 Qualidade do Código:
 - Estrutura modular com separação clara de responsabilidades
@@ -160,10 +227,10 @@ Experiência do Usuário:
 CONCLUSÕES
 ----------
 
-O projeto foi bem-sucedido em recriar dois jogos clássicos com alta fidelidade às versões originais, adicionando melhorias modernas como áudio e interface responsiva. A implementação demonstra domínio de conceitos fundamentais de programação de jogos e uso efetivo da plataforma Processing.
+O projeto foi bem-sucedido em recriar três jogos clássicos com alta fidelidade às versões originais, adicionando melhorias modernas como áudio e interface responsiva. A implementação demonstra domínio de conceitos fundamentais de programação de jogos e uso efetivo da plataforma Processing.
 
 As principais conquistas incluem:
-- Implementação completa de duas experiências de jogo distintas
+- Implementação completa de três experiências de jogo distintas
 - Código bem estruturado e documentado
 - Tratamento robusto de erros
 - Interface de usuário polida
